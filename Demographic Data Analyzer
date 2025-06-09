@@ -1,0 +1,58 @@
+import pandas as pd
+
+def demographic_data_analyzer():
+    # Load dataset
+    df = pd.read_csv("adult.data.csv")
+
+    # Race count
+    race_count = df["race"].value_counts()
+
+    # Average age of men
+    average_age_men = df[df["sex"] == "Male"]["age"].mean()
+
+    # Percentage of people with a Bachelor's degree
+    bachelors_count = (df["education"] == "Bachelors").sum()
+    total_count = len(df)
+    percentage_bachelors = (bachelors_count / total_count) * 100
+
+    # Higher education filter
+    higher_education = df[df["education"].isin(["Bachelors", "Masters", "Doctorate"])]
+    lower_education = df[~df["education"].isin(["Bachelors", "Masters", "Doctorate"])]
+
+    # Percentage of people with higher education earning >50K
+    higher_education_rich = (higher_education["salary"] == ">50K").mean() * 100
+
+    # Percentage of people without higher education earning >50K
+    lower_education_rich = (lower_education["salary"] == ">50K").mean() * 100
+
+    # Minimum work hours
+    min_work_hours = df["hours-per-week"].min()
+
+    # Percentage of people who work minimum hours and earn >50K
+    num_min_workers = df[df["hours-per-week"] == min_work_hours]
+    rich_percentage_min_workers = (num_min_workers["salary"] == ">50K").mean() * 100
+
+    # Country with highest percentage of rich people
+    country_percentage = df[df["salary"] == ">50K"].groupby("native-country").size() / df.groupby("native-country").size() * 100
+    highest_earning_country = country_percentage.idxmax()
+    highest_earning_country_percentage = country_percentage.max()
+
+    # Most popular occupation for >50K earners in India
+    india_top_occupation = df[(df["native-country"] == "India") & (df["salary"] == ">50K")]["occupation"].value_counts().idxmax()
+
+    # Returning results
+    return {
+        "race_count": race_count,
+        "average_age_men": round(average_age_men, 1),
+        "percentage_bachelors": round(percentage_bachelors, 1),
+        "higher_education_rich": round(higher_education_rich, 1),
+        "lower_education_rich": round(lower_education_rich, 1),
+        "min_work_hours": min_work_hours,
+        "rich_percentage_min_workers": round(rich_percentage_min_workers, 1),
+        "highest_earning_country": highest_earning_country,
+        "highest_earning_country_percentage": round(highest_earning_country_percentage, 1),
+        "india_top_occupation": india_top_occupation
+        
+    }
+    
+demographic_data_analyzer()
