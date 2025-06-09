@@ -23,9 +23,9 @@ def calculate(input_list):
 def get_user_input():
     try:
         user_input = input("Enter 9 numbers separated by spaces: ")
-        input_list = list(map(int, user_input.split()))
-        result = calculate(input_list)
-        for key, value in result.items():
+        input_list = list(map(int, user_input.split()))     #converting the input that is string to integer and then into list 
+        result = calculate(input_list)      #calculation(calling the function )
+        for key, value in result.items():  #making the output look in the form of key:value  
             print(f"{key}: {value}")
     except ValueError as e:
         print(e)
